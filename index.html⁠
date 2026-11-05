@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchPay - Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .fade-out { opacity: 0; transition: opacity 0.5s ease-out; }
+        .fade-in { opacity: 0; animation: fadeIn 0.5s ease-in forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        /* Mobile container styling to look like an app on desktop */
+        .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; background-color: #f8fafc; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="app-container">
+
+    <!-- ================= 1. LOGIN PAGE ================= -->
+    <div id="login-page" class="min-h-screen flex flex-col justify-center px-6 bg-white">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 block"></span> WATCHPAY
+            </h1>
+            <p class="text-slate-500 mt-2 text-sm">Login to your dashboard</p>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                <input type="email" placeholder="Enter your email" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Password</label>
+                <input type="password" placeholder="Enter your password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+            </div>
+            <button onclick="login()" class="w-full mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-200 transition-all">
+                LOGIN
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= 2. DASHBOARD PAGE ================= -->
+    <div id="dashboard-page" class="hidden min-h-screen pb-20 bg-gradient-to-b from-emerald-50 via-white to-slate-50">
+        
+        <!-- Top Header -->
+        <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-md px-4 py-4 flex justify-between items-center shadow-sm">
+            <h1 class="text-xl font-black text-slate-800 flex items-center gap-2 tracking-tight">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 block animate-pulse"></span> WATCHPAY
+            </h1>
+            <div class="bg-emerald-500 text-white px-4 py-1.5 rounded-full font-bold shadow-md shadow-emerald-200">
+                ₹0.00
+            </div>
+        </div>
+
+        <div class="p-4 space-y-6">
+
+            <!-- QR Code Payment Section -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
+                <div class="text-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-800">Add Funds</h2>
+                    <p class="text-xs text-slate-500">Scan to Pay & Start Earning</p>
+                </div>
+                
+                <div class="flex justify-center mb-4">
+                    <div class="w-40 h-40 bg-slate-100 rounded-xl flex items-center justify-center border-2 border-dashed border-slate-300 overflow-hidden">
+                        <!-- YAHAN APNA ASLI QR CODE IMAGE LINK DAALEIN -->
+                        <!-- Example: <img src="aapka-qr-link.jpg" class="w-full h-full object-cover"> -->
+                        <i class="ph ph-qr-code text-6xl text-slate-400"></i>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" placeholder="Enter UTR / Transaction ID" class="w-full text-center px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50 font-mono">
+                    <button class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md">
+                        VERIFY PAYMENT
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Orders Section Header -->
+            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-4 border border-emerald-100 relative overflow-hidden">
+                <i class="ph-fill ph-lightning absolute -right-2 -bottom-2 text-6xl text-amber-300/30"></i>
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-1">
+                    🔥 Live Orders
+                </h2>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Instant Add Amount + Bonus • Payouts from 1Win, Stake, Parimatch, Dafabet, MelBet
+                </p>
+            </div>
+
+            <!-- Live Orders Feed Container -->
+            <div id="orders-container" class="space-y-4">
+                <!-- Cards will be generated here by JavaScript -->
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 w-full max-w-[480px] bg-white border-t border-slate-100 flex justify-around py-3 pb-5 z-50">
+            <button class="flex flex-col items-center text-slate-400">
+                <i class="ph ph-clipboard-text text-2xl"></i>
+                <span class="text-[10px] font-semibold mt-1">Orders</span>
+            </button>
+            <button class="flex flex-col items-center text-emerald-500">
+                <i class="ph-fill ph-house text-2xl"></i>
+                <span class="text-[10px] font-semibold mt-1">Home</span>
+            </button>
+            <button class="flex flex-col items-center text-slate-400">
+                <i class="ph ph-user text-2xl"></i>
+                <span class="text-[10px] font-semibold mt-1">Profile</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // PAGE NAVIGATION
+    function login() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('dashboard-page').classList.remove('hidden');
+        initOrders(); // Start generating orders when dashboard opens
+    }
+
+    // LIVE ORDERS LOGIC
+    const platforms = ['DAFABET', 'STAKE', '1WIN', 'PARIMATCH', 'MELBET', '4RABET'];
+    const container = document.getElementById('orders-container');
+
+    // Format number to Indian Rupee format (e.g. 1,557)
+    function formatMoney(amount) {
+        return amount.toLocaleString('en-IN');
+    }
+
+    // Generate a single HTML card
+    function createOrderCard() {
+        // Random amount between 1,000 and 30,000
+        const amount = Math.floor(Math.random() * (30000 - 1000 + 1)) + 1000;
+        // Exactly 25% bonus
+        const bonus = Math.floor(amount * 0.25);
+        // Random platform
+        const platform = platforms[Math.floor(Math.random() * platforms.length)];
+        // Unique ID for the card
+        const cardId = 'card-' + Math.random().toString(36).substr(2, 9);
+
+        const div = document.createElement('div');
+        div.id = cardId;
+        div.className = 'bg-white rounded-2xl p-4 shadow-sm border border-slate-100 fade-in';
+        div.innerHTML = `
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h3 class="text-2xl font-black text-slate-800 tracking-tight">₹${formatMoney(amount)}</h3>
+                    <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md text-xs font-bold mt-1 border border-emerald-100">
+                        🎁 +₹${formatMoney(bonus)} bonus
+                    </div>
+                </div>
+                <button id="btn-${cardId}" class="bg-gradient-to-b from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white text-xs font-black px-4 py-2.5 rounded-lg shadow-md shadow-emerald-200 flex items-center gap-1.5 transition-all">
+                    <i class="ph ph-credit-card text-base"></i> PAY ORDER
+                </button>
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-slate-50">
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Payout Requests From</span>
+                <span class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">${platform}</span>
+            </div>
+        `;
+        return div;
+    }
+
+    // Initialize first 4 cards
+    function initOrders() {
+        container.innerHTML = ''; // Clear container
+        for (let i = 0; i < 4; i++) {
+            container.appendChild(createOrderCard());
+        }
+        startSoldOutCycle();
+    }
+
+    // The Sold Out Engine (Runs every 15-30 seconds)
+    function startSoldOutCycle() {
+        // Random time between 15s (15000ms) and 30s (30000ms)
+        const delay = Math.floor(Math.random() * (30000 - 15000 + 1)) + 15000;
+        
+        setTimeout(() => {
+            const cards = container.children;
+            if (cards.length > 0) {
+                // Pick a random card from currently displayed ones
+                const randomIdx = Math.floor(Math.random() * cards.length);
+                const targetCard = cards[randomIdx];
+                const btnId = 'btn-' + targetCard.id;
+                const btn = document.getElementById(btnId);
+
+                if (btn) {
+                    // 1. Turn button grey and show SOLD OUT
+                    btn.className = "bg-slate-200 text-slate-500 text-xs font-black px-4 py-2.5 rounded-lg flex items-center gap-1.5 cursor-not-allowed";
+                    btn.innerHTML = `<i class="ph ph-x-circle text-base"></i> SOLD OUT`;
+                    
+                    // 2. Wait 2.5 seconds, then fade out and replace
+                    setTimeout(() => {
+                        targetCard.classList.add('fade-out');
+                        
+                        setTimeout(() => {
+                            targetCard.remove(); // Remove old card
+                            // Generate and add a new card at the top
+                            container.insertBefore(createOrderCard(), container.firstChild);
+                        }, 500); // Wait for fade out animation
+
+                    }, 2500);
+                }
+            }
+            // Loop the cycle
+            startSoldOutCycle();
+        }, delay);
+    }
+</script>
+
+</body>
+</html>
